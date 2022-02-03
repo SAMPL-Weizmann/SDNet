@@ -120,17 +120,17 @@ if __name__ == "__main__":
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, verbose=True)
 
     #loss initialization
-    total_loss = supervision.AverageMeter()
-    running_reco_loss = supervision.AverageMeter()
-    running_kl_loss = supervision.AverageMeter()
-    running_dice_loss = supervision.AverageMeter()
-    running_reg_loss = supervision.AverageMeter()
-    running_focal_loss = supervision.AverageMeter()
-    running_kl_a_loss = supervision.AverageMeter()
-    running_reg_a_loss = supervision.AverageMeter()
+    total_loss = supervision.AverageMeter(device)
+    running_reco_loss = supervision.AverageMeter(device)
+    running_kl_loss = supervision.AverageMeter(device)
+    running_dice_loss = supervision.AverageMeter(device)
+    running_reg_loss = supervision.AverageMeter(device)
+    running_focal_loss = supervision.AverageMeter(device)
+    running_kl_a_loss = supervision.AverageMeter(device)
+    running_reg_a_loss = supervision.AverageMeter(device)
     
     #validation loss initialization
-    val_running_dice_loss = supervision.AverageMeter()
+    val_running_dice_loss = supervision.AverageMeter(device)
 
     #auxiliary tensors init
     b_images = torch.zeros(args.batch_size, 1, 224, 224)
@@ -243,14 +243,14 @@ if __name__ == "__main__":
                         visualizer.append_loss(epoch, global_iterations, running_kl_a_loss.avg.item(), "KLD_a")
                         visualizer.append_loss(epoch, global_iterations, running_reg_a_loss.avg.item(), "Regression_a")
 
-                    total_loss.reset()
-                    running_reco_loss.reset()
-                    running_kl_loss.reset()
-                    running_dice_loss.reset()
-                    running_reg_loss.reset()
-                    running_focal_loss.reset()
-                    running_kl_a_loss.reset()
-                    running_reg_a_loss.reset()
+                    total_loss.reset(device)
+                    running_reco_loss.reset(device)
+                    running_kl_loss.reset(device)
+                    running_dice_loss.reset(device)
+                    running_reg_loss.reset(device)
+                    running_focal_loss.reset(device)
+                    running_kl_a_loss.reset(device)
+                    running_reg_a_loss.reset(device)
                 global_iterations += args.batch_size
                 in_batch_iter = 0
         #validation
@@ -295,7 +295,7 @@ if __name__ == "__main__":
                                     model_params['num_mask_channels'], optimizer, \
                                     epoch, args.name + "_model_state_epoch_" + str(epoch), \
                                     final_dir)
-            val_running_dice_loss.reset()
+            val_running_dice_loss.reset(device)
 
         
 

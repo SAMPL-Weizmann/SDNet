@@ -61,7 +61,7 @@ if __name__ == "__main__":
         'norm': loaded_params['norm'],
         'upsample': loaded_params['upsample'],
         'num_classes': loaded_params['num_classes'],
-        'decoder_type': loaded_params['decoder_type'],
+        # 'decoder_type': loaded_params['decoder_type'],
         'anatomy_out_channels': loaded_params['anatomy_out_channels'],
         'z_length': loaded_params['z_length'],
         'num_mask_channels': loaded_params['num_mask_channels']
@@ -80,8 +80,8 @@ if __name__ == "__main__":
     tmasks = torch.from_numpy(tdata.masks.astype(float))
 
     #Dice score variable initialization
-    test_running_dice_score = supervision.AverageMeter()
-    test_running_std = supervision.AverageMeter()
+    test_running_dice_score = supervision.AverageMeter(device)
+    test_running_std = supervision.AverageMeter(device)
 
     #auxiliary tensors init
     t_image = torch.zeros(1, 1, 224, 224)
@@ -109,4 +109,4 @@ if __name__ == "__main__":
         print("Test Samples: {}\nDice: {}\n"\
             .format(iteration+1, test_running_dice_score.avg))
 
-        test_running_dice_score.reset()
+        test_running_dice_score.reset(device)
